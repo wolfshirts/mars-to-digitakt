@@ -33,18 +33,19 @@ def get_path_list(path):
         if len(files) > 0:
             for i in files:
                 if is_wav(i) and is_c_or_non_pitched(i):
+
                     to_zip.append(os.path.join(root, i))
     return to_zip
 
-def create_zip(files):
-    with zipfile.ZipFile(sys.argv[1].split("/")[-1], 'w') as zipped:
+def create_zip(files, trim):
+    with zipfile.ZipFile(f"{sys.argv[1].split('/')[-1]}.zip", 'w') as zipped:
         for f in files:
-            zipped.write(f, compress_type=zipfile.ZIP_DEFLATED)
+            zipped.write(f, arcname=(f"{f.replace(trim, '')}"),compress_type=zipfile.ZIP_DEFLATED)
 
 path = argsParse(sys.argv)
 if os.path.isdir(path):
     res = get_path_list(path)
-    create_zip(res)
+    create_zip(res,path)
 else:
     print("not a directory")
     sys.exit()
